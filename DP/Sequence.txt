@@ -1,0 +1,56 @@
+Dynamic Programming:
+1)Memoization
+2)Tabulation
+
+follow Aditya Verma's DP Playlist on Youtube.
+
+Tabulation is more efficient as it doesn't affects the stack memory because recursive function calls is not involved
+
+There are Ten Parent problems:
+1)0-1 Knapsack
+2)Unbounded Knapsack
+3)Longest Common Subsequence
+4)Longest Increasing Sequence
+
+
+
+
+Variations of 0-1 Knapsack:
+1)Subset Sum 
+2)Find Partition Subset
+3)Count of Subset Sum
+4)Minimum Subset Sum Difference
+5)Count of Subset Sum with given Difference
+6)Target Sum (Same as Problem 5)
+
+Variations of Unbounded Knapsack:
+1)Rod Cutting
+2)Coin Change(No of ways of change)
+3)Coin Change(min coins to change)
+
+Variations of LCS:
+1)Print LCS
+2)Longest Common Substring
+3)Shortest Common Supersequence SCS
+4)Print SCS 
+5)Minimum Deletions and Insertions to match Strings MinInsDel.cpp
+6)Edit String
+7)Longest Palidromic Subsequence LPS
+8)Minimum Deletions For LPS
+9)Minimum Insertions For LPS
+    Same as Problem 8;
+    for str="adbcbea"
+    Min Deletions=2 d and e 
+    Min Insertions=2 aedbcdea or adebcbeda
+10)Longest Repeating Subsequence LRS
+11)Sequence Pattern Matching
+
+Variations of LIS:
+1)Max Sum LIS
+2)Minimum Insertions to sort
+
+Variations of Mcm:
+1) Palindrome Partitioning
+2) Evaluate expression to true
+3) Scrambled String
+4) Egg Dropping
