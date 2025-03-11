@@ -23,7 +23,7 @@ int longestCommonSum(bool arr1[], bool arr2[], int n)
 
         int diff = prefixSum1 -prefixSum2 + n;
 
-        if(diff == 0)
+        if(prefixSum1 - prefixSum2 == 0)
         {
             maxlen = i+1;
         }
