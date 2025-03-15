@@ -14,11 +14,11 @@ int EqualAddXORPairs(int n)
     int count = 0;
     while(n)
     {
-        if((n & 1) == 0)
-            count++;
-        n = n >> 1;
+        if((n & 1) == 0) // Check if the last bit is 0
+            count++; // Count the number of 0s
+        n = n >> 1; // Right shift to process the next bit
     }
-    return 1 << count;
+    return 1 << count; // Compute 2^count using bit shifting
 }
 
 int main()
