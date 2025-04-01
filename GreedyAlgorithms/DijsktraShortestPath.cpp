@@ -14,6 +14,8 @@ public:
     }
 };
 
+// priority_queue treats Compare as a “should this go lower in priority?” function.
+// if function returns true then lhs has less priority than rhs
 struct CmpEdgePtrs
 {
     bool operator()(const Edge* lhs, const Edge* rhs) const
