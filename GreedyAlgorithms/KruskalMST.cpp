@@ -44,7 +44,7 @@ void Union(vector<int>& parent, vector<int>& rank, int x, int y){
     else
     {
         parent[p2] = p1;
-        p1++;
+        rank[p1]++;
     }
 }
 
