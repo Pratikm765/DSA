@@ -82,7 +82,9 @@ public:
     }
 };
 
-
+// A Strongly Connected Component (SCC) in a directed graph
+// is a subgraph where there is a directed path between
+// every pair of vertices.
 int main(){
     Graph g(5);
     g.addEdge(1, 0);
