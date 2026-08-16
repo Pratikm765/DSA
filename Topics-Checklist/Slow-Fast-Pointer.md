@@ -1,61 +1,80 @@
-Slow & Fast Pointer — Interview Revision Sheet
+Absolutely. Below is clean GitHub-ready Markdown. You can copy everything inside the code block directly into slow-fast-pointer.md.
 
-The Slow/Fast Pointer pattern is primarily used when you need to reason about position, relative distance, or cycles without using extra memory.
+# Slow & Fast Pointer — Interview Revision Sheet
+> A comprehensive revision sheet for the Slow/Fast Pointer and Two-Pointer patterns used in linked lists, arrays, and cyclic sequences.
+---
+## 1. Pattern Overview
+The **Slow/Fast Pointer** pattern uses two pointers moving at different speeds or maintaining a fixed distance.
+Typical movement:
+```cpp
+slow = slow->next;
+fast = fast->next->next;
 
-The two pointers usually move at different speeds:
+The pattern is useful for:
 
-slow → 1 step
-fast → 2 steps
-
-But the pattern has several important variations.
-
-⸻
-
-1. Core Pattern
-
-Basic Floyd’s Cycle Detection
-
-ListNode* slow = head;
-ListNode* fast = head;
-do {
-    slow = slow->next;
-    fast = fast->next->next;
-} while (slow != fast);
-
-The important idea:
-
-If both pointers enter a cycle and fast moves 2× as quickly as slow, they will eventually meet.
-
-Why?
-
-Inside the cycle, fast gains one position per iteration relative to slow.
-
-Eventually:
-
-slow == fast
+* Finding the middle of a linked list
+* Detecting cycles
+* Finding the beginning of a cycle
+* Finding duplicates using cycle detection
+* Finding the Nth node from the end
+* Palindrome linked lists
+* Reordering linked lists
+* Detecting cycles in non-linked-list sequences
 
 ⸻
 
 2. Pattern Recognition Cheat Sheet
 
-When you see:
-
-Problem clue	Think
-Find middle	Slow/Fast
-Detect cycle	Floyd
+Problem Clue	Pattern
+Find middle of linked list	Slow/Fast
+Detect cycle	Floyd’s Cycle Detection
 Find cycle entrance	Floyd Phase 2
-Find duplicate without modifying array	Array → cycle
+Find duplicate without modifying array	Array → Cycle
 Nth node from end	Fast pointer offset
 Palindrome linked list	Middle + Reverse
 Reorder linked list	Middle + Reverse + Merge
 Repeated transformation	Treat values as nodes → Floyd
-Different length linked lists	Pointer switching/alignment
+Intersection of two linked lists	Pointer switching/alignment
 
 ⸻
 
-3. Problem 1 — Middle of Linked List
+3. Core Concept — Floyd’s Cycle Detection
 
-Goal
+Also called:
+
+Floyd’s Tortoise and Hare Algorithm
+
+Two pointers move at different speeds:
+
+slow → 1 step
+fast → 2 steps
+
+Basic idea:
+
+slow = slow->next;
+fast = fast->next->next;
+
+If there is a cycle, eventually:
+
+slow == fast
+
+Why?
+
+Once both pointers are inside the cycle, fast gains one position relative to slow during every iteration.
+
+Eventually they must meet.
+
+⸻
+
+4. Find Middle of Linked List
+
+Problem
+
+Given:
+
+1 → 2 → 3 → 4 → 5
+
+Find the middle node:
 
 1 → 2 → 3 → 4 → 5
         ↑
@@ -63,75 +82,85 @@ Goal
 
 Approach
 
-slow = head;
-fast = head;
+Use:
+
+* slow → moves 1 step
+* fast → moves 2 steps
+
+ListNode* slow = head;
+ListNode* fast = head;
 while (fast != nullptr && fast->next != nullptr) {
     slow = slow->next;
     fast = fast->next->next;
 }
 
-When the loop ends:
+When the loop finishes:
 
 slow → middle
 
 Complexity
 
-Time:  O(n)
-Space: O(1)
+* Time: O(n)
+* Space: O(1)
 
-Interview trigger
+Interview Trigger
 
 “Find the middle of a linked list.”
 
 Immediately think:
 
-Slow/Fast.
+Slow/Fast Pointer
 
 ⸻
 
-4. Problem 2 — Linked List Cycle
+5. Linked List Cycle
 
-Goal
+Problem
 
-Determine whether:
+Determine whether a linked list contains a cycle.
+
+Example:
 
 1 → 2 → 3 → 4
         ↑   ↓
         └───┘
 
-contains a cycle.
-
 Approach
 
-slow = slow->next;
-fast = fast->next->next;
+ListNode* slow = head;
+ListNode* fast = head;
+while (fast != nullptr && fast->next != nullptr) {
+    slow = slow->next;
+    fast = fast->next->next;
+    if (slow == fast)
+        return true;
+}
+return false;
 
 If:
 
 slow == fast
 
-→ cycle exists.
+a cycle exists.
 
-If fast reaches nullptr:
-
-→ no cycle.
+If fast reaches nullptr, there is no cycle.
 
 Complexity
 
-Time:  O(n)
-Space: O(1)
+* Time: O(n)
+* Space: O(1)
 
-Key insight
+Key Insight
 
-Don’t use a set if the interviewer expects O(1) space.
+A set can detect visited nodes, but Floyd’s algorithm achieves O(1) extra space.
 
 ⸻
 
-5. Problem 3 — Linked List Cycle II
+6. Linked List Cycle II — Find Cycle Entrance
 
-Goal
+Problem
 
-Find the entry point of the cycle.
+Find the node where the cycle begins.
 
 Example:
 
@@ -139,60 +168,87 @@ Example:
         ↑       ↓
         └───────┘
 
-Cycle starts at 3.
+Cycle entrance:
 
-Phase 1 — Detect cycle
+3
 
-slow = head;
-fast = head;
-while (...) {
+⸻
+
+Phase 1 — Detect Cycle
+
+Use Floyd’s algorithm:
+
+ListNode* slow = head;
+ListNode* fast = head;
+while (fast != nullptr && fast->next != nullptr) {
     slow = slow->next;
     fast = fast->next->next;
     if (slow == fast)
         break;
 }
 
-Meeting point is not necessarily the cycle entrance.
+The collision point is somewhere inside the cycle.
 
-Phase 2 — Find entrance
+It is not necessarily the cycle entrance.
+
+⸻
+
+Phase 2 — Find Entrance
 
 Reset one pointer:
 
 slow = head;
 
-Then:
+Then move both one step:
 
 while (slow != fast) {
     slow = slow->next;
     fast = fast->next;
 }
 
-Meeting point = cycle entrance.
+The meeting point is the cycle entrance.
 
 Complexity
 
-Time:  O(n)
-Space: O(1)
+* Time: O(n)
+* Space: O(1)
 
-Important interview concept
+Important Interview Concept
 
-You should be able to explain why Phase 2 works, not just memorize it.
+Be prepared to explain:
+
+Why does resetting one pointer to head and moving both one step find the cycle entrance?
+
+This is often more important than memorizing the code.
 
 ⸻
 
-6. Problem 4 — Find the Duplicate Number ⭐
+7. Find the Duplicate Number
 
-Example:
+Problem
 
-[1,3,4,2,2]
+Given:
 
-Key insight
+nums = [1,3,4,2,2]
 
-Treat the array as a linked list:
+Return:
+
+2
+
+⸻
+
+Key Insight
+
+Treat the array as a linked list.
 
 index → nums[index]
 
 For:
+
+index:  0  1  2  3  4
+nums:   1  3  4  2  2
+
+The links become:
 
 0 → 1 → 3 → 2 → 4
             ↑   ↓
@@ -200,15 +256,21 @@ For:
 
 The duplicate creates a cycle.
 
-Phase 1
+⸻
 
-Floyd cycle detection:
+Phase 1 — Detect Cycle
 
-slow = nums[slow];
-fast = nums[fast];
-fast = nums[fast];
+int slow = 0;
+int fast = 0;
+do {
+    slow = nums[slow];
+    fast = nums[fast];
+    fast = nums[fast];
+} while (slow != fast);
 
-Phase 2
+⸻
+
+Phase 2 — Find Cycle Entrance
 
 slow = 0;
 while (slow != fast) {
@@ -218,40 +280,53 @@ while (slow != fast) {
 
 Return:
 
-slow
+return slow;
 
 Complexity
 
-Time:  O(n)
-Space: O(1)
+* Time: O(n)
+* Space: O(1)
+* Input array is not modified
 
 Pattern
 
 Array
- ↓
+  ↓
 Treat values as next pointers
- ↓
+  ↓
 Cycle
- ↓
+  ↓
 Floyd
+  ↓
+Cycle entrance
+  ↓
+Duplicate
 
-This is a very important pattern-recognition problem.
+This is one of the most important pattern-recognition problems.
 
 ⸻
 
-7. Problem 5 — Remove Nth Node From End
+8. Remove Nth Node From End
 
-Key idea
+Problem
 
-Create a distance of n between two pointers.
+Given:
 
-fast
-  ↓
 1 → 2 → 3 → 4 → 5
-↑
-slow
 
-Move fast ahead by n.
+Remove the 2nd node from the end:
+
+1 → 2 → 3 → 5
+
+⸻
+
+Key Idea
+
+Maintain a fixed distance of n between two pointers.
+
+slow ←──── n nodes ────→ fast
+
+Move fast ahead by n nodes.
 
 Then move both together.
 
@@ -259,44 +334,48 @@ When fast reaches the end:
 
 slow → node before target
 
-Then remove:
+Remove:
 
 slow->next = slow->next->next;
 
-Common improvement
+⸻
+
+Recommended Approach
 
 Use a dummy node:
 
 dummy → 1 → 2 → 3 → 4 → 5
 
-This handles:
-
-n == length
-
-cleanly.
+This makes removing the head easier.
 
 Complexity
 
-Time:  O(n)
-Space: O(1)
+* Time: O(n)
+* Space: O(1)
 
 Pattern
 
 Fast pointer offset
 
-Not technically Floyd’s cycle detection, but part of the broader two-pointer family.
+This is part of the broader Two-Pointer family, even though it isn’t Floyd cycle detection.
 
 ⸻
 
-8. Problem 6 — Palindrome Linked List ⭐
+9. Palindrome Linked List
 
-Example
+Problem
+
+Determine whether:
 
 1 → 2 → 3 → 2 → 1
 
+is a palindrome.
+
+⸻
+
 Approach
 
-Three steps:
+Use three steps:
 
 1. Find middle
        ↓
@@ -304,90 +383,144 @@ Three steps:
        ↓
 3. Compare both halves
 
-Step 1
+⸻
 
-Slow/Fast:
+Step 1 — Find Middle
+
+Use slow/fast pointers.
+
+For:
+
+1 → 2 → 3 → 2 → 1
+
+you reach approximately:
 
 1 → 2 → 3 → 2 → 1
         ↑
        slow
 
-For odd length, skip the middle element when necessary.
+For odd-length lists, skip the middle element when appropriate.
 
-Step 2
+⸻
 
-Reverse:
+Step 2 — Reverse Second Half
+
+Example:
+
+1 → 2 → 3 → 2 → 1
+
+Second half:
 
 2 → 1
 
-Step 3
+After reversal:
+
+1 → 2
+
+⸻
+
+Step 3 — Compare
 
 Compare:
 
+First half:
 1 → 2 → 3
-    ↓
+Second half:
 1 → 2
+
+If every corresponding value matches, the list is a palindrome.
 
 Complexity
 
-Time:  O(n)
-Space: O(1)
+* Time: O(n)
+* Space: O(1)
 
-Pattern combination
+Pattern Combination
 
 Slow/Fast
     +
 Linked List Reversal
     +
-Two Pointers
+Two Pointer Comparison
 
 ⸻
 
-9. Problem 7 — Reorder List ⭐⭐⭐
+10. Reorder List
 
-Example:
+Problem
+
+Given:
 
 1 → 2 → 3 → 4 → 5
 
-becomes:
+Reorder into:
 
 1 → 5 → 2 → 4 → 3
 
-Three-step approach
+⸻
+
+Approach
+
+Three steps:
 
 Find middle
     ↓
 Reverse second half
     ↓
-Merge alternating
+Merge alternating nodes
 
-Split:
+⸻
 
+Step 1 — Find Middle
+
+1 → 2 → 3 | 4 → 5
+          ↑
+         slow
+
+Split the list.
+
+First:
 1 → 2 → 3
+Second:
 4 → 5
 
-Reverse:
+⸻
+
+Step 2 — Reverse Second Half
 
 5 → 4
 
-Merge:
+⸻
+
+Step 3 — Merge Alternating
+
+First:  1 → 2 → 3
+Second: 5 → 4
+
+Result:
 
 1 → 5 → 2 → 4 → 3
 
 Complexity
 
-Time:  O(n)
-Space: O(1)
+* Time: O(n)
+* Space: O(1)
 
-Interview takeaway
+Interview Pattern
 
-This is one of the best problems for testing whether you can combine linked-list patterns.
+Middle
+  ↓
+Reverse
+  ↓
+Merge
+
+This is an excellent linked-list interview problem because it combines multiple patterns.
 
 ⸻
 
-10. Problem 8 — Intersection of Two Linked Lists
+11. Intersection of Two Linked Lists
 
-This one does not require slow/fast, but belongs in your two-pointer toolkit.
+This problem uses Two-Pointer Alignment, rather than traditional slow/fast movement.
 
 Example:
 
@@ -397,57 +530,74 @@ A: 1 → 2 → 3
             /
 B:     4 → 5
 
-Trick
+The lists may have different lengths.
 
-Pointer A:
+⸻
+
+Key Trick
+
+Pointer A traverses:
 
 A → B
 
-Pointer B:
+Pointer B traverses:
 
 B → A
 
 Implementation:
 
+ListNode* p1 = headA;
+ListNode* p2 = headB;
 while (p1 != p2) {
     p1 = (p1 == nullptr) ? headB : p1->next;
     p2 = (p2 == nullptr) ? headA : p2->next;
 }
-
-Eventually:
-
-p1 == p2
-
-Either:
-
-intersection node
-
-or:
-
-nullptr
-
-Why it works
-
-Both pointers travel:
-
-A + B
-
-Therefore they travel the same total distance, regardless of the original lengths.
-
-Complexity
-
-Time:  O(m+n)
-Space: O(1)
+return p1;
 
 ⸻
 
-11. Problem 9 — Happy Number ⭐
+Why Does This Work?
+
+Suppose:
+
+length(A) = m
+length(B) = n
+
+Pointer A travels:
+
+m + n
+
+Pointer B travels:
+
+n + m
+
+Therefore both travel the same total distance.
+
+If an intersection exists, they meet at the same actual node.
+
+If there is no intersection:
+
+p1 == p2 == nullptr
+
+Complexity
+
+* Time: O(m+n)
+* Space: O(1)
+
+Pattern
+
+Pointer A → A + B
+Pointer B → B + A
+
+⸻
+
+12. Happy Number
 
 This is an important variation because there is no linked list.
 
-Define:
+Definition
 
-next(n) = sum of squares of digits
+Repeatedly replace a number with the sum of the squares of its digits.
 
 Example:
 
@@ -461,147 +611,183 @@ Example:
  ↓
 1
 
-Treat it as:
-
-19 → 82 → 68 → 100 → 1
-
-For an unhappy number, it eventually enters a cycle.
-
-Therefore:
-
-slow = next(slow)
-fast = next(next(fast))
-
-Key insight
-
-Floyd doesn’t require a linked list.
-
-It requires:
-
-A deterministic function where repeatedly applying f(x) can produce a cycle.
-
-Complexity
-
-Time:  O(log n) approximately
-Space: O(1)
+Since it reaches 1, 19 is a happy number.
 
 ⸻
 
-12. The Most Important Variations You’ve Learned
+Key Insight
 
-You can now group your problems into:
+Treat each number as a node:
 
-A. Different speeds
+number → next(number)
 
-slow → 1
-fast → 2
+where:
+
+next(number)
+=
+sum of squares of digits
+
+Example:
+
+19 → 82 → 68 → 100 → 1
+
+For an unhappy number, the sequence eventually enters a cycle.
+
+Therefore Floyd’s algorithm can be used.
+
+slow = next(slow);
+fast = next(next(fast));
+
+If the sequence reaches 1:
+
+Happy
+
+If slow == fast before reaching 1:
+
+Not Happy
+
+⸻
+
+Helper Function
+
+int sumSquareDigits(int n) {
+    int result = 0;
+    while (n > 0) {
+        int digit = n % 10;
+        result += digit * digit;
+        n /= 10;
+    }
+    return result;
+}
+
+Complexity
+
+* Time: approximately O(log n) per transformation
+* Space: O(1) using Floyd
+
+Important Pattern
+
+Floyd does not require a linked list.
+
+It works whenever you have a deterministic sequence:
+
+x → f(x) → f(f(x)) → f(f(f(x))) → ...
+
+and that sequence can eventually enter a cycle.
+
+⸻
+
+13. Important Variations
+
+A. Different Speeds
+
+slow → 1 step
+fast → 2 steps
 
 Used for:
 
-* Middle
-* Cycle detection
-* Cycle entrance
-* Find Duplicate
+* Middle of Linked List
+* Cycle Detection
+* Cycle Entrance
+* Find Duplicate Number
 * Happy Number
 
 ⸻
 
-B. Fixed distance
+B. Fixed Distance
 
 slow ←──── n ────→ fast
 
 Used for:
 
-* Nth node from end
+* Remove Nth Node From End
 
 ⸻
 
-C. Find middle + transformation
+C. Middle + Reversal
 
 Slow/Fast
     ↓
-Middle
+Find Middle
     ↓
 Reverse
 
 Used for:
 
-* Palindrome
+* Palindrome Linked List
 * Reorder List
 
 ⸻
 
-D. Pointer alignment
+D. Pointer Alignment
 
 A → B
 B → A
 
 Used for:
 
-* Intersection of Linked Lists
+* Intersection of Two Linked Lists
 
 ⸻
 
-🔥 Interview Decision Tree
+14. Interview Decision Tree
 
-When you see a linked-list problem, ask:
+When you see a linked-list problem:
 
-                Linked List
-                    │
-          ┌─────────┴─────────┐
-          │                   │
-       Position?             Cycle?
-          │                   │
-       Slow/Fast          Floyd
-          │                   │
-    ┌─────┴─────┐       ┌─────┴─────┐
-    │           │       │           │
- Middle      Nth End   Detect     Find Entry
-                            │
-                          Cycle II
-
-If you see:
-
-Palindrome
-
-think:
-
-Middle → Reverse → Compare
+                    Linked List
+                         |
+              +----------+----------+
+              |                     |
+          Position?               Cycle?
+              |                     |
+          Slow/Fast              Floyd
+              |                     |
+       +------+-----+         +-----+------+
+       |            |         |            |
+    Middle       Nth End    Detect      Find Entry
+                                     
 
 If you see:
 
-Reorder
+“Find middle”
 
-think:
+→ Slow/Fast
 
-Middle → Reverse → Merge
+“Detect cycle”
 
-If you see:
+→ Floyd
 
-Two linked lists
-+
-intersection
+“Find cycle starting point”
 
-think:
+→ Floyd Phase 2
 
-A → B
-B → A
+“Nth node from end”
 
-If you see:
+→ Fast pointer offset
 
-Repeated transformation
+“Palindrome”
 
-think:
+→ Middle → Reverse → Compare
 
-Can I model this as:
-x → f(x) → f(f(x)) ...
-?
+“Reorder”
 
-If yes → Floyd may work.
+→ Middle → Reverse → Merge
+
+“Intersection of two lists”
+
+→ Pointer switching
+
+“Repeated transformation”
+
+→ Ask:
+
+Can I model this as x → f(x)?
+
+If yes, consider Floyd.
 
 ⸻
 
-🧠 Templates to Memorize
+15. Templates to Memorize
 
 Find Middle
 
@@ -630,7 +816,7 @@ return false;
 
 Find Cycle Entrance
 
-// Phase 1: detect collision
+// Phase 1: Detect collision
 // Phase 2:
 slow = head;
 while (slow != fast) {
@@ -657,6 +843,8 @@ return prev;
 
 Intersection
 
+ListNode* p1 = headA;
+ListNode* p2 = headB;
 while (p1 != p2) {
     p1 = p1 ? p1->next : headB;
     p2 = p2 ? p2->next : headA;
@@ -665,17 +853,76 @@ return p1;
 
 ⸻
 
-🎯 Problems You’ve Completed
-
-Your current progress:
+16. Problems Completed
 
 Problem	Pattern	Status
-Middle of LL	Slow/Fast	🟢
+Middle of Linked List	Slow/Fast	🟢
 Linked List Cycle	Floyd	🟢
 Linked List Cycle II	Floyd + Phase 2	🟢
 Find Duplicate Number	Array → Cycle	🟢
-Remove Nth From End	Pointer Offset	🟢
-Palindrome LL	Middle + Reverse	🟢
+Remove Nth Node From End	Pointer Offset	🟢
+Palindrome Linked List	Middle + Reverse	🟢
 Reorder List	Middle + Reverse + Merge	🟢
-Intersection of LL	Pointer Alignment	🟢
-Happy Number	Floyd on sequence	🟢
+Intersection of Linked Lists	Pointer Alignment	🟢
+Happy Number	Floyd on Sequence	🟢
+
+⸻
+
+17. Final Mental Model
+
+Before coding, ask:
+
+1. Do I need to find a position?
+       ↓
+   Slow/Fast
+2. Could there be a cycle?
+       ↓
+   Floyd
+3. Do I need the cycle entrance?
+       ↓
+   Floyd Phase 2
+4. Do I need a fixed distance between pointers?
+       ↓
+   Fast Pointer Offset
+5. Do I need to compare two halves?
+       ↓
+   Middle + Reverse
+6. Do two linked lists have different lengths?
+       ↓
+   Pointer Switching
+7. Is there a repeated transformation?
+       ↓
+   Model x → f(x)
+       ↓
+   Consider Floyd
+
+⸻
+
+18. Complexity Summary
+
+Problem	Time	Space
+Middle of Linked List	O(n)	O(1)
+Linked List Cycle	O(n)	O(1)
+Cycle II	O(n)	O(1)
+Find Duplicate	O(n)	O(1)
+Remove Nth From End	O(n)	O(1)
+Palindrome Linked List	O(n)	O(1)
+Reorder List	O(n)	O(1)
+Intersection	O(m+n)	O(1)
+Happy Number	O(log n) per transformation	O(1)
+
+⸻
+
+19. Key Takeaways
+
+Remember these 5 things:
+
+1. Slow/Fast is not just for cycle detection.
+2. Floyd works on any deterministic sequence that can form a cycle.
+3. Find Duplicate Number = Array interpreted as a linked list.
+4. Palindrome/Reorder = Middle + Reverse + Two Pointer.
+5. Intersection = Align pointer distances using A → B and B → A.
+
+Pattern recognition is more important than memorizing individual solutions.
+
+Once you recognize the structure, the implementation usually follows naturally.
